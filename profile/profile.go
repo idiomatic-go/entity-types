@@ -1,4 +1,4 @@
-package entity
+package profile
 
 // Profile configuration for Go services. See : https://pkg.go.dev/net/http/pprof
 type Profile struct {
