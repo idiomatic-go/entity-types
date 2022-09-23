@@ -1,9 +1,17 @@
 package accesslog
 
+import (
+	"github.com/idiomatic-go/common-lib/util"
+)
+
 type AccessLogView struct {
 	Version string
 	Headers []string
 	Cookies []string
+}
+
+func CreateVersionedEntity() *util.VersionedEntity {
+	return util.CreateVersionedEntity(AccessLogView{}, GetVersion)
 }
 
 var GetVersion = func(a any) string {
