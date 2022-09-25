@@ -2,17 +2,49 @@ package accesslog
 
 import (
 	"github.com/idiomatic-go/common-lib/util"
+	"strings"
 	"sync/atomic"
 )
 
 type versionedState struct {
 	hash uint32
-	view AccessLogView
+	mu   Mutations
 }
 
 type VersionedEntity struct {
 	index int32
 	state [2]versionedState
+}
+
+func CreateEntity(ingressAttributes string,
+	egressAttributes string,
+	requestHeaders string,
+	responseHeaders string,
+	responseTrailers string,
+	cookies string) Mutations {
+	view := Mutations{Version: LocalVersion}
+	view.IngressAttributes = parseAttributes(ingressAttributes)
+	view.EgressAttributes = parseAttributes(egressAttributes)
+	view.RequestHeaders = parseAttributes(requestHeaders)
+	view.ResponseHeaders = parseAttributes(responseHeaders)
+	view.ResponseTrailers = parseAttributes(responseTrailers)
+	view.Cookies = parseAttributes(cookies)
+	return view
+}
+
+func parseAttributes(attrs string) []string {
+	if attrs == "" {
+		return nil
+	}
+	tokens := strings.Split(attrs, ",")
+	if tokens == nil {
+		return nil
+	}
+	var list []string
+	for _, s := range tokens {
+		list = append(list, s)
+	}
+	return list
 }
 
 func CreateVersionedEntity() *VersionedEntity {
@@ -31,12 +63,12 @@ func (v *VersionedEntity) IsNewVersion(version string) bool {
 	return util.SimpleHash(version) != atomic.LoadUint32(&v.getState().hash)
 }
 
-func (v *VersionedEntity) GetEntity() AccessLogView {
-	return v.getState().view
+func (v *VersionedEntity) GetEntity() Mutations {
+	return v.getState().mu
 }
 
-func (v *VersionedEntity) SetEntity(view *AccessLogView) {
-	if view == nil {
+func (v *VersionedEntity) SetEntity(mu *Mutations) {
+	if mu == nil {
 		return
 	}
 	index := atomic.LoadInt32(&v.index)
@@ -46,7 +78,7 @@ func (v *VersionedEntity) SetEntity(view *AccessLogView) {
 	} else {
 		index = 0
 	}
-	v.state[index].view = *view
-	v.state[index].hash = util.SimpleHash(view.Version)
+	v.state[index].mu = *mu
+	v.state[index].hash = util.SimpleHash(mu.Version)
 	atomic.StoreInt32(&v.index, index)
 }

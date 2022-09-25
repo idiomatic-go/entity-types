@@ -26,7 +26,7 @@ func ExampleSetEntity() {
 	fmt.Printf("Entity : %v\n\n", e.GetEntity())
 
 	// Set entity
-	e.SetEntity(&AccessLogView{Version: "1.2.3"})
+	e.SetEntity(&Mutations{Version: "1.2.3"})
 	fmt.Printf("New version [] : %v\n", e.IsNewVersion(""))
 	fmt.Printf("Index valid : %v\n", e.index == 1)
 	fmt.Printf("Hash : %v\n", e.getState().hash)
@@ -34,7 +34,7 @@ func ExampleSetEntity() {
 	fmt.Printf("Entity : %v\n\n", e.GetEntity())
 
 	// Set entity
-	e.SetEntity(&AccessLogView{Version: "1.2.4"})
+	e.SetEntity(&Mutations{Version: "1.2.4"})
 	fmt.Printf("New version [1.2.3] : %v\n", e.IsNewVersion("1.2.3"))
 	fmt.Printf("Index valid : %v\n", e.index == 0)
 	fmt.Printf("Hash : %v\n", e.getState().hash)
