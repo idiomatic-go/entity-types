@@ -16,23 +16,14 @@ type VersionedEntity struct {
 	state [2]versionedState
 }
 
-func CreateEntity(ingress string,
-	egress string,
-	requestHeaders string,
-	responseHeaders string,
-	responseTrailers string,
-	cookies string) View {
+func CreateEntity(ingress *CSVAttributes, egress *CSVAttributes) View {
 	view := View{Version: LocalVersion}
-	view.Ingress = parseView(ingress)
-	view.Egress = parseView(egress)
-	view.RequestHeaders = parseView(requestHeaders)
-	view.ResponseHeaders = parseView(responseHeaders)
-	view.ResponseTrailers = parseView(responseTrailers)
-	view.Cookies = parseView(cookies)
+	view.Ingress = Attributes{App: tokenize(ingress.App), RequestHeaders: tokenize(ingress.RequestHeaders), ResponseHeaders: tokenize(ingress.ResponseHeaders), ResponseTrailers: tokenize(ingress.ResponseTrailers), Cookies: tokenize(ingress.Cookies)}
+	view.Egress = Attributes{App: tokenize(egress.App), RequestHeaders: tokenize(egress.RequestHeaders), ResponseHeaders: tokenize(egress.ResponseHeaders), ResponseTrailers: tokenize(egress.ResponseTrailers), Cookies: tokenize(egress.Cookies)}
 	return view
 }
 
-func parseView(attrs string) []string {
+func tokenize(attrs string) []string {
 	if attrs == "" {
 		return nil
 	}
@@ -42,6 +33,9 @@ func parseView(attrs string) []string {
 	}
 	var list []string
 	for _, s := range tokens {
+		if s == "" {
+			continue
+		}
 		list = append(list, s)
 	}
 	return list

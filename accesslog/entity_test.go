@@ -2,7 +2,51 @@ package accesslog
 
 import "fmt"
 
-func ExampleEmpty() {
+func ExampleTokenize() {
+	tokens := tokenize("")
+	fmt.Printf("Tokens [] : %v\n", tokens)
+
+	tokens = tokenize(",")
+	fmt.Printf("Tokens [,] : %v\n", tokens)
+
+	tokens = tokenize(",,,")
+	fmt.Printf("Tokens [,,,] : %v\n", tokens)
+
+	tokens = tokenize(",start_time")
+	fmt.Printf("Tokens [,start_time] : %v\n", tokens)
+
+	tokens = tokenize(",start_time,,duration")
+	fmt.Printf("Tokens [,start_time,,duration] : %v\n", tokens)
+
+	//Output:
+	// Tokens [] : []
+	// Tokens [,] : []
+	// Tokens [,,,] : []
+	// Tokens [,start_time] : [start_time]
+	// Tokens [,start_time,,duration] : [start_time duration]
+}
+
+func ExampleCreateEntity() {
+	ingress := CSVAttributes{App: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
+	egress := CSVAttributes{App: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
+	view := CreateEntity(&ingress, &egress)
+	fmt.Printf("Ingress View : %v\n", view.Ingress)
+	fmt.Printf("Egress View : %v\n", view.Egress)
+
+	ingress = CSVAttributes{App: "ingress_log_attr", RequestHeaders: "ingress_req_header1,ingress_req_header2", ResponseHeaders: "ingress_resp_header", ResponseTrailers: "ingress_resp_trailer", Cookies: "ingress_cookie"}
+	egress = CSVAttributes{App: "egress_log_attr", RequestHeaders: "egress_req_header1,egress_req_header2", ResponseHeaders: "egress_resp_header", ResponseTrailers: "egress_resp_trailer", Cookies: "egress_cookie1,egress_cookie2"}
+	view = CreateEntity(&ingress, &egress)
+	fmt.Printf("Ingress View : %v\n", view.Ingress)
+	fmt.Printf("Egress View : %v\n", view.Egress)
+
+	//Output:
+	// Ingress View : {[] [] [] [] []}
+	// Egress View : {[] [] [] [] []}
+	// Ingress View : {[ingress_log_attr] [ingress_req_header1 ingress_req_header2] [ingress_resp_header] [ingress_resp_trailer] [ingress_cookie]}
+	// Egress View : {[egress_log_attr] [egress_req_header1 egress_req_header2] [egress_resp_header] [egress_resp_trailer] [egress_cookie1 egress_cookie2]}
+}
+
+func ExampleVersionedEntityEmpty() {
 	e := CreateVersionedEntity()
 	fmt.Printf("Valid index : %v\n", e.index == 0)
 	fmt.Printf("Hash : %v\n", e.getState().hash)
@@ -18,7 +62,7 @@ func ExampleEmpty() {
 	// IsEmptyEntity : true
 }
 
-func ExampleSetEntity() {
+func ExampleVersionedEntitySetEntity() {
 	e := CreateVersionedEntity()
 
 	// Set entity
@@ -42,11 +86,11 @@ func ExampleSetEntity() {
 	// Index valid : true
 	// Hash : 414986927
 	// IsEmptyEntity : false
-	// Entity : {1.2.3 [] [] [] [] [] []}
+	// Entity : {1.2.3 {[] [] [] [] []} {[] [] [] [] []}}
 	//
 	// New version [1.2.3] : true
 	// Index valid : true
 	// Hash : 364654070
 	// IsEmptyEntity : false
-	// Entity : {1.2.4 [] [] [] [] [] []}
+	// Entity : {1.2.4 {[] [] [] [] []} {[] [] [] [] []}}
 }
