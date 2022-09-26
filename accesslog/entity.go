@@ -16,15 +16,15 @@ type VersionedEntity struct {
 	state [2]versionedState
 }
 
-func CreateEntity(ingressView string,
-	egressView string,
+func CreateEntity(ingress string,
+	egress string,
 	requestHeaders string,
 	responseHeaders string,
 	responseTrailers string,
 	cookies string) View {
 	view := View{Version: LocalVersion}
-	view.Ingress = parseView(ingressView)
-	view.Egress = parseView(egressView)
+	view.Ingress = parseView(ingress)
+	view.Egress = parseView(egress)
 	view.RequestHeaders = parseView(requestHeaders)
 	view.ResponseHeaders = parseView(responseHeaders)
 	view.ResponseTrailers = parseView(responseTrailers)
