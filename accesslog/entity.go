@@ -7,8 +7,8 @@ import (
 )
 
 type versionedState struct {
-	hash uint32
-	mu   Mutations
+	hash  uint32
+	attrs View
 }
 
 type VersionedEntity struct {
@@ -16,23 +16,23 @@ type VersionedEntity struct {
 	state [2]versionedState
 }
 
-func CreateEntity(ingressAttributes string,
-	egressAttributes string,
+func CreateEntity(ingressView string,
+	egressView string,
 	requestHeaders string,
 	responseHeaders string,
 	responseTrailers string,
-	cookies string) Mutations {
-	view := Mutations{Version: LocalVersion}
-	view.IngressAttributes = parseAttributes(ingressAttributes)
-	view.EgressAttributes = parseAttributes(egressAttributes)
-	view.RequestHeaders = parseAttributes(requestHeaders)
-	view.ResponseHeaders = parseAttributes(responseHeaders)
-	view.ResponseTrailers = parseAttributes(responseTrailers)
-	view.Cookies = parseAttributes(cookies)
+	cookies string) View {
+	view := View{Version: LocalVersion}
+	view.Ingress = parseView(ingressView)
+	view.Egress = parseView(egressView)
+	view.RequestHeaders = parseView(requestHeaders)
+	view.ResponseHeaders = parseView(responseHeaders)
+	view.ResponseTrailers = parseView(responseTrailers)
+	view.Cookies = parseView(cookies)
 	return view
 }
 
-func parseAttributes(attrs string) []string {
+func parseView(attrs string) []string {
 	if attrs == "" {
 		return nil
 	}
@@ -63,12 +63,12 @@ func (v *VersionedEntity) IsNewVersion(version string) bool {
 	return util.SimpleHash(version) != atomic.LoadUint32(&v.getState().hash)
 }
 
-func (v *VersionedEntity) GetEntity() Mutations {
-	return v.getState().mu
+func (v *VersionedEntity) GetEntity() View {
+	return v.getState().attrs
 }
 
-func (v *VersionedEntity) SetEntity(mu *Mutations) {
-	if mu == nil {
+func (v *VersionedEntity) SetEntity(attrs *View) {
+	if attrs == nil {
 		return
 	}
 	index := atomic.LoadInt32(&v.index)
@@ -78,7 +78,7 @@ func (v *VersionedEntity) SetEntity(mu *Mutations) {
 	} else {
 		index = 0
 	}
-	v.state[index].mu = *mu
-	v.state[index].hash = util.SimpleHash(mu.Version)
+	v.state[index].attrs = *attrs
+	v.state[index].hash = util.SimpleHash(attrs.Version)
 	atomic.StoreInt32(&v.index, index)
 }

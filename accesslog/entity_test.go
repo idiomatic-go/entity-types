@@ -20,13 +20,9 @@ func ExampleEmpty() {
 
 func ExampleSetEntity() {
 	e := CreateVersionedEntity()
-	fmt.Printf("Index valid : %v\n", e.index == 0)
-	fmt.Printf("Hash : %v\n", e.getState().hash)
-	fmt.Printf("IsEmptyEntity : %v\n", e.IsEmpty())
-	fmt.Printf("Entity : %v\n\n", e.GetEntity())
 
 	// Set entity
-	e.SetEntity(&Mutations{Version: "1.2.3"})
+	e.SetEntity(&View{Version: "1.2.3"})
 	fmt.Printf("New version [] : %v\n", e.IsNewVersion(""))
 	fmt.Printf("Index valid : %v\n", e.index == 1)
 	fmt.Printf("Hash : %v\n", e.getState().hash)
@@ -34,7 +30,7 @@ func ExampleSetEntity() {
 	fmt.Printf("Entity : %v\n\n", e.GetEntity())
 
 	// Set entity
-	e.SetEntity(&Mutations{Version: "1.2.4"})
+	e.SetEntity(&View{Version: "1.2.4"})
 	fmt.Printf("New version [1.2.3] : %v\n", e.IsNewVersion("1.2.3"))
 	fmt.Printf("Index valid : %v\n", e.index == 0)
 	fmt.Printf("Hash : %v\n", e.getState().hash)
@@ -42,20 +38,15 @@ func ExampleSetEntity() {
 	fmt.Printf("Entity : %v\n\n", e.GetEntity())
 
 	//Output:
-	// Index valid : true
-	// Hash : 0
-	// IsEmptyEntity : true
-	// Entity : { [] [] [] []}
-	//
 	// New version [] : true
 	// Index valid : true
 	// Hash : 414986927
 	// IsEmptyEntity : false
-	// Entity : {1.2.3 [] [] [] []}
+	// Entity : {1.2.3 [] [] [] [] [] []}
 	//
 	// New version [1.2.3] : true
 	// Index valid : true
 	// Hash : 364654070
 	// IsEmptyEntity : false
-	// Entity : {1.2.4 [] [] [] []}
+	// Entity : {1.2.4 [] [] [] [] [] []}
 }
