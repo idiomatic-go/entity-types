@@ -27,23 +27,23 @@ func ExampleTokenize() {
 }
 
 func ExampleCreateEntity() {
-	ingress := CSVAttributes{App: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
-	egress := CSVAttributes{App: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
+	ingress := CSVAttributes{App: "", Custom: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
+	egress := CSVAttributes{App: "", Custom: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
 	view := CreateEntity(&ingress, &egress)
 	fmt.Printf("Ingress View : %v\n", view.Ingress)
 	fmt.Printf("Egress View : %v\n", view.Egress)
 
-	ingress = CSVAttributes{App: "ingress_log_attr", RequestHeaders: "ingress_req_header1,ingress_req_header2", ResponseHeaders: "ingress_resp_header", ResponseTrailers: "ingress_resp_trailer", Cookies: "ingress_cookie"}
-	egress = CSVAttributes{App: "egress_log_attr", RequestHeaders: "egress_req_header1,egress_req_header2", ResponseHeaders: "egress_resp_header", ResponseTrailers: "egress_resp_trailer", Cookies: "egress_cookie1,egress_cookie2"}
-	view = CreateEntity(&ingress, &egress)
-	fmt.Printf("Ingress View : %v\n", view.Ingress)
-	fmt.Printf("Egress View : %v\n", view.Egress)
+	ingress2 := CSVAttributes{App: "ingress_log_attr", Custom: "ingress_custom", RequestHeaders: "ingress_req_header1,ingress_req_header2", ResponseHeaders: "ingress_resp_header", ResponseTrailers: "ingress_resp_trailer", Cookies: "ingress_cookie"}
+	egress2 := CSVAttributes{App: "egress_log_attr", Custom: "egress_custom", RequestHeaders: "egress_req_header1,egress_req_header2", ResponseHeaders: "egress_resp_header", ResponseTrailers: "egress_resp_trailer", Cookies: "egress_cookie1,egress_cookie2"}
+	view2 := CreateEntity(&ingress2, &egress2)
+	fmt.Printf("Ingress View : %v\n", view2.Ingress)
+	fmt.Printf("Egress View : %v\n", view2.Egress)
 
 	//Output:
-	// Ingress View : {[] [] [] [] []}
-	// Egress View : {[] [] [] [] []}
-	// Ingress View : {[ingress_log_attr] [ingress_req_header1 ingress_req_header2] [ingress_resp_header] [ingress_resp_trailer] [ingress_cookie]}
-	// Egress View : {[egress_log_attr] [egress_req_header1 egress_req_header2] [egress_resp_header] [egress_resp_trailer] [egress_cookie1 egress_cookie2]}
+	// Ingress View : {[] [] [] [] [] []}
+	// Egress View : {[] [] [] [] [] []}
+	// Ingress View : {[ingress_log_attr] [ingress_custom] [ingress_req_header1 ingress_req_header2] [ingress_resp_header] [ingress_resp_trailer] [ingress_cookie]}
+	// Egress View : {[egress_log_attr] [egress_custom] [egress_req_header1 egress_req_header2] [egress_resp_header] [egress_resp_trailer] [egress_cookie1 egress_cookie2]}
 }
 
 func ExampleVersionedEntityEmpty() {
@@ -86,11 +86,11 @@ func ExampleVersionedEntitySetEntity() {
 	// Index valid : true
 	// Hash : 414986927
 	// IsEmptyEntity : false
-	// Entity : {1.2.3 {[] [] [] [] []} {[] [] [] [] []}}
+	// Entity : {1.2.3 {[] [] [] [] [] []} {[] [] [] [] [] []}}
 	//
 	// New version [1.2.3] : true
 	// Index valid : true
 	// Hash : 364654070
 	// IsEmptyEntity : false
-	// Entity : {1.2.4 {[] [] [] [] []} {[] [] [] [] []}}
+	// Entity : {1.2.4 {[] [] [] [] [] []} {[] [] [] [] [] []}}
 }

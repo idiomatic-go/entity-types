@@ -4,6 +4,7 @@ const LocalVersion = "0.0.0"
 
 type Attributes struct {
 	App              []string
+	Custom           []string
 	RequestHeaders   []string
 	ResponseHeaders  []string
 	ResponseTrailers []string
@@ -18,6 +19,7 @@ type View struct {
 
 type CSVAttributes struct {
 	App              string
+	Custom           string
 	RequestHeaders   string
 	ResponseHeaders  string
 	ResponseTrailers string

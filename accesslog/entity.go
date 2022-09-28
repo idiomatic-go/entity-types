@@ -18,8 +18,8 @@ type VersionedEntity struct {
 
 func CreateEntity(ingress *CSVAttributes, egress *CSVAttributes) View {
 	view := View{Version: LocalVersion}
-	view.Ingress = Attributes{App: tokenize(ingress.App), RequestHeaders: tokenize(ingress.RequestHeaders), ResponseHeaders: tokenize(ingress.ResponseHeaders), ResponseTrailers: tokenize(ingress.ResponseTrailers), Cookies: tokenize(ingress.Cookies)}
-	view.Egress = Attributes{App: tokenize(egress.App), RequestHeaders: tokenize(egress.RequestHeaders), ResponseHeaders: tokenize(egress.ResponseHeaders), ResponseTrailers: tokenize(egress.ResponseTrailers), Cookies: tokenize(egress.Cookies)}
+	view.Ingress = Attributes{App: tokenize(ingress.App), Custom: tokenize(ingress.Custom), RequestHeaders: tokenize(ingress.RequestHeaders), ResponseHeaders: tokenize(ingress.ResponseHeaders), ResponseTrailers: tokenize(ingress.ResponseTrailers), Cookies: tokenize(ingress.Cookies)}
+	view.Egress = Attributes{App: tokenize(egress.App), Custom: tokenize(egress.Custom), RequestHeaders: tokenize(egress.RequestHeaders), ResponseHeaders: tokenize(egress.ResponseHeaders), ResponseTrailers: tokenize(egress.ResponseTrailers), Cookies: tokenize(egress.Cookies)}
 	return view
 }
 
