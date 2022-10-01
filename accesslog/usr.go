@@ -17,6 +17,16 @@ type Configuration struct {
 	Egress  Attributes
 }
 
+type versionedState struct {
+	hash   uint32
+	config Configuration
+}
+
+type VersionedEntity struct {
+	index int32
+	state [2]versionedState
+}
+
 type CSVAttributes struct {
 	App              string
 	Custom           string
