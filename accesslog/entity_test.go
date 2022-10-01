@@ -29,13 +29,13 @@ func ExampleTokenize() {
 func ExampleCreateEntity() {
 	ingress := CSVAttributes{App: "", Custom: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
 	egress := CSVAttributes{App: "", Custom: "", RequestHeaders: "", ResponseHeaders: "", ResponseTrailers: "", Cookies: ""}
-	view := CreateEntity(&ingress, &egress)
+	view := CreateConfiguration(&ingress, &egress)
 	fmt.Printf("Ingress View : %v\n", view.Ingress)
 	fmt.Printf("Egress View : %v\n", view.Egress)
 
 	ingress2 := CSVAttributes{App: "ingress_log_attr", Custom: "ingress_custom", RequestHeaders: "ingress_req_header1,ingress_req_header2", ResponseHeaders: "ingress_resp_header", ResponseTrailers: "ingress_resp_trailer", Cookies: "ingress_cookie"}
 	egress2 := CSVAttributes{App: "egress_log_attr", Custom: "egress_custom", RequestHeaders: "egress_req_header1,egress_req_header2", ResponseHeaders: "egress_resp_header", ResponseTrailers: "egress_resp_trailer", Cookies: "egress_cookie1,egress_cookie2"}
-	view2 := CreateEntity(&ingress2, &egress2)
+	view2 := CreateConfiguration(&ingress2, &egress2)
 	fmt.Printf("Ingress View : %v\n", view2.Ingress)
 	fmt.Printf("Egress View : %v\n", view2.Egress)
 

@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 )
 
-func CreateEntity(ingress *CSVAttributes, egress *CSVAttributes) Configuration {
+func CreateConfiguration(ingress *CSVAttributes, egress *CSVAttributes) Configuration {
 	config := Configuration{Version: LocalVersion}
 	config.Ingress = Attributes{App: tokenize(ingress.App), Custom: tokenize(ingress.Custom), RequestHeaders: tokenize(ingress.RequestHeaders), ResponseHeaders: tokenize(ingress.ResponseHeaders), ResponseTrailers: tokenize(ingress.ResponseTrailers), Cookies: tokenize(ingress.Cookies)}
 	config.Egress = Attributes{App: tokenize(egress.App), Custom: tokenize(egress.Custom), RequestHeaders: tokenize(egress.RequestHeaders), ResponseHeaders: tokenize(egress.ResponseHeaders), ResponseTrailers: tokenize(egress.ResponseTrailers), Cookies: tokenize(egress.Cookies)}
