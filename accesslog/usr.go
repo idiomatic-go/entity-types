@@ -11,7 +11,7 @@ type Attributes struct {
 	Cookies          []string
 }
 
-type View struct {
+type Configuration struct {
 	Version string
 	Ingress Attributes
 	Egress  Attributes

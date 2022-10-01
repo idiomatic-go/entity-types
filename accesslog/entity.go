@@ -7,8 +7,8 @@ import (
 )
 
 type versionedState struct {
-	hash  uint32
-	attrs View
+	hash   uint32
+	config Configuration
 }
 
 type VersionedEntity struct {
@@ -16,11 +16,11 @@ type VersionedEntity struct {
 	state [2]versionedState
 }
 
-func CreateEntity(ingress *CSVAttributes, egress *CSVAttributes) View {
-	view := View{Version: LocalVersion}
-	view.Ingress = Attributes{App: tokenize(ingress.App), Custom: tokenize(ingress.Custom), RequestHeaders: tokenize(ingress.RequestHeaders), ResponseHeaders: tokenize(ingress.ResponseHeaders), ResponseTrailers: tokenize(ingress.ResponseTrailers), Cookies: tokenize(ingress.Cookies)}
-	view.Egress = Attributes{App: tokenize(egress.App), Custom: tokenize(egress.Custom), RequestHeaders: tokenize(egress.RequestHeaders), ResponseHeaders: tokenize(egress.ResponseHeaders), ResponseTrailers: tokenize(egress.ResponseTrailers), Cookies: tokenize(egress.Cookies)}
-	return view
+func CreateEntity(ingress *CSVAttributes, egress *CSVAttributes) Configuration {
+	config := Configuration{Version: LocalVersion}
+	config.Ingress = Attributes{App: tokenize(ingress.App), Custom: tokenize(ingress.Custom), RequestHeaders: tokenize(ingress.RequestHeaders), ResponseHeaders: tokenize(ingress.ResponseHeaders), ResponseTrailers: tokenize(ingress.ResponseTrailers), Cookies: tokenize(ingress.Cookies)}
+	config.Egress = Attributes{App: tokenize(egress.App), Custom: tokenize(egress.Custom), RequestHeaders: tokenize(egress.RequestHeaders), ResponseHeaders: tokenize(egress.ResponseHeaders), ResponseTrailers: tokenize(egress.ResponseTrailers), Cookies: tokenize(egress.Cookies)}
+	return config
 }
 
 func tokenize(attrs string) []string {
@@ -57,12 +57,12 @@ func (v *VersionedEntity) IsNewVersion(version string) bool {
 	return util.SimpleHash(version) != atomic.LoadUint32(&v.getState().hash)
 }
 
-func (v *VersionedEntity) GetEntity() View {
-	return v.getState().attrs
+func (v *VersionedEntity) GetEntity() Configuration {
+	return v.getState().config
 }
 
-func (v *VersionedEntity) SetEntity(attrs *View) {
-	if attrs == nil {
+func (v *VersionedEntity) SetEntity(config *Configuration) {
+	if config == nil {
 		return
 	}
 	index := atomic.LoadInt32(&v.index)
@@ -72,7 +72,7 @@ func (v *VersionedEntity) SetEntity(attrs *View) {
 	} else {
 		index = 0
 	}
-	v.state[index].attrs = *attrs
-	v.state[index].hash = util.SimpleHash(attrs.Version)
+	v.state[index].config = *config
+	v.state[index].hash = util.SimpleHash(config.Version)
 	atomic.StoreInt32(&v.index, index)
 }
