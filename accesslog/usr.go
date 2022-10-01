@@ -11,6 +11,8 @@ type Attributes struct {
 	Cookies          []string
 }
 
+// Cofiguration
+// TODO : need to add base attribtues as there is a configuration for each service
 type Configuration struct {
 	Version string
 	Ingress Attributes
